@@ -71,7 +71,7 @@ def speak_text(story):
 
     
 if __name__ == "__main__":
-    PROMPT = "Generate an origin story for a main character in a RPG game. It must be at least 500 words. Give the main character a name. It should be PG-13. It should be set in:"
+    PROMPT = "Generate a bedtime story. It must be at least 500 words. Give the main character a name. It should be PG-13. It should be set in:"
     print("Please choose a story prompt:")
     print("1. Fantasy")
     print("2. Post-apocalyptic")
