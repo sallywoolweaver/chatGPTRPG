@@ -11,6 +11,7 @@ import openai
 
 load_dotenv()
 API_KEY = os.environ.get("API_KEY")
+
 openai.api_key = API_KEY
 
 
@@ -31,27 +32,18 @@ def chatStory(prompt):
         
 def summarize_story(story):
     if story:
-        response = requests.post(
-        "https://api.openai.com/v1/engines/text-davinci-002/completions",
-            headers={
-                "Authorization": f"Bearer {API_KEY}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "prompt": "Summarize in 15 words this story: " + story,
-                "max_tokens": 1024,
-                "temperature": 0.5,
-                "top_p": 1,
-                "frequency_penalty": 0,
-                "presence_penalty": 0,
-            }
+          response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Summerize this story in 15 words or less:"},
+                {"role": "user", "content": prompt},
+            ],
+            #stop=None,
+            temperature=0,
         )
-        response_json = response.json()
-        choices = response_json.get("choices")
-        if choices:
-            return choices[0].get("text")
-    
-    return None
+          story = response['choices'][0]['message']['content']
+    return story
+
 
 def save_story(story):
     with open("story.txt", "w") as file:
@@ -66,7 +58,7 @@ def speak_textPYTT(story):
     engine.runAndWait()
 
 def speak_text(story):
-    tts = gTTS(text=story, lang='en', slow=False)
+    tts = gTTS(text=story, lang='en', tld='co.uk')
     tts.save("story.mp3")
     pygame.mixer.init()
     pygame.mixer.music.load("story.mp3")
